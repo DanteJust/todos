@@ -6,6 +6,36 @@ import jwt from 'jsonwebtoken';
 
 const config = process.env;
 
+const getUser = async (req: Request, res: Response, next: NextFunction) => {
+    const { username } = req.params;
+
+    return User.findOne({ username: username })
+    .then(user => {
+        if (user === null){
+            return res.status(404).json({ message: 'User not found!' });
+        }
+        const userWithoutPassword = {
+            _id: user._id,
+            username: user.username
+        }
+        res.status(200).json({ userWithoutPassword });
+    })
+}
+
+const getAllUsers = async (req: Request, res: Response, next: NextFunction) => {
+
+    return User.find({}).then(users => {
+        const usersWithoutPassword = users.map(user => {
+            return {
+                _id: user._id,
+                username: user.username
+            }
+        });
+        res.status(200).json({ usersWithoutPassword });
+    })
+    .catch(error => res.status(500).json({ error }));
+}
+
 const registerUser = async (req: Request, res: Response, next: NextFunction) => {
     const { username, password } = req.body;
 
@@ -49,4 +79,4 @@ const loginUser = async (req: Request, res: Response, next: NextFunction) => {
     .catch((error) => res.status(500).json({ error }));
 };
 
-export default { registerUser, loginUser };
+export default { registerUser, loginUser, getAllUsers, getUser };

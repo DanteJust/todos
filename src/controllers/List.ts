@@ -8,6 +8,23 @@ interface JwtPayload {
      _id: string
 };
 
+const getAllLists = async (req: Request, res: Response, next: NextFunction) => {
+    return List.find({}).then(lists => res.status(200).json({ lists })).catch(error => res.status(500).json({ error }));
+}
+
+const getUserLists = async (req: Request, res: Response, next: NextFunction) => {
+    const { username } = req.params;
+
+    return User.findOne({ username: username })
+    .then(async (user) => {
+        if (user === null){
+            return res.status(404).json({ message: 'User not found!' });
+        }
+        return List.find({ owner_id: user._id }).then(list => res.status(200).json({ list })).catch(error => res.status(500).json({ error }));
+    })
+    .catch(error => res.status(500).json({ error }));
+}
+
 const createList = async (req: Request, res: Response, next: NextFunction) => {
     const { name, token } = req.body;
 
@@ -39,24 +56,4 @@ const deleteList = async (req: Request, res: Response, next: NextFunction) => {
     return List.deleteOne({ name: name, owner_id: _id }).then(() => res.status(204).json({ message: 'List successfully deleted!' })).catch(error => res.status(500).json({ error }));
 }
 
-const getMyLists = async (req: Request, res: Response, next: NextFunction) => {
-    const { token } = req.query;
-    const { _id } = jwt.decode(token.toString()) as JwtPayload;
-
-    return List.find({ owner_id: _id }).then((list) => res.status(200).json({ list })).catch(error => res.status(500).json({ error }));
-}
-
-const getUserLists = async (req: Request, res: Response, next: NextFunction) => {
-    const { username } = req.params;
-
-    return User.findOne({ username: username })
-    .then(async (user) => {
-        if (user === null){
-            return res.status(404).json({ message: 'User not found!' });
-        }
-        return List.find({ owner_id: user._id }).then(list => res.status(200).json({ list })).catch(error => res.status(500).json({ error }));
-    })
-    .catch(error => res.status(500).json({ error }));
-}
-
-export default { createList, deleteList, getMyLists, getUserLists };
+export default { createList, deleteList, getUserLists, getAllLists };

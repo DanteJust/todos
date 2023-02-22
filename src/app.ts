@@ -3,7 +3,7 @@ import mongoose from 'mongoose';
 import authRouter from './routes/auth';
 import listRouter from './routes/list';
 import { config } from './config/config';
-import verifyToken from './middleware/auth';
+import userRouter from './routes/users';
 
 const app = express();
 
@@ -23,6 +23,7 @@ const startApi = () => {
     app.use(express.urlencoded({ extended: true }));
     app.use(express.json());
     app.use('/api/auth', authRouter);
+    app.use('/api/users', userRouter);
     app.use('/api/list', listRouter);
     app.listen(config.server.port, () => {
         console.log(`Server listening on port ${config.server.port}.`);

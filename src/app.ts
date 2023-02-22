@@ -1,6 +1,7 @@
 import express, { Request, Response, NextFunction } from 'express';
 import mongoose from 'mongoose';
 import authRouter from './routes/auth';
+import listRouter from './routes/list';
 import { config } from './config/config';
 import verifyToken from './middleware/auth';
 
@@ -21,10 +22,8 @@ mongoose.connect(config.mongo.url, { retryWrites: true, w: 'majority' })
 const startApi = () => {
     app.use(express.urlencoded({ extended: true }));
     app.use(express.json());
-    app.post('/', verifyToken, (req: Request, res: Response, next: NextFunction) => {
-        res.status(200).json({ message: 'Token verified!' });
-    });
     app.use('/api/auth', authRouter);
+    app.use('/api/list', listRouter);
     app.listen(config.server.port, () => {
         console.log(`Server listening on port ${config.server.port}.`);
     });

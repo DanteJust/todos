@@ -9,14 +9,6 @@ const config = process.env;
 const registerUser = async (req: Request, res: Response, next: NextFunction) => {
     const { username, password } = req.body;
 
-    if (typeof username !== 'string' || typeof password !== 'string'){
-        return res.status(500).json({ message: 'All fields must be strings!' });
-    }
-
-    if (!(username && password)){
-        return res.status(400).json({ message: 'All fields are required!' });
-    }
-
     const checkIfUserAlreadyExists = await User.findOne({ username: username });
     if (checkIfUserAlreadyExists != null){
         return res.status(409).json({ message: 'User with that username already exists!' });
@@ -36,14 +28,6 @@ const registerUser = async (req: Request, res: Response, next: NextFunction) => 
 const loginUser = async (req: Request, res: Response, next: NextFunction) => {
     const { username, password } = req.body;
 
-    if (typeof username !== 'string' || typeof password !== 'string'){
-        return res.status(500).json({ message: 'All fields must be strings!' });
-    }
-
-    if (!(username && password)){
-        return res.status(400).json({ message: 'All fields are required!' });
-    }
-
     return User.findOne({ username: username })
     .then(async (user) => {
         if (user === null){
@@ -51,7 +35,7 @@ const loginUser = async (req: Request, res: Response, next: NextFunction) => {
         }
         if (await bcrypt.compare(password, user.password)){
             const token = jwt.sign(
-                { user_id: user._id },
+                { _id: user._id },
                 config.TOKEN_KEY,
                 {
                     expiresIn: '2h'

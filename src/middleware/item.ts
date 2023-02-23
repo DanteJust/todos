@@ -1,7 +1,12 @@
 import { NextFunction, Request, Response } from "express";
+import jwt from "jsonwebtoken";
 import Item from "../models/Item";
 import List from "../models/List";
 import User from '../models/User';
+
+interface JwtPayload {
+    _id: string
+};
 
 const verifyUserAndListPath = (req: Request, res: Response, next: NextFunction) => {
     const { user_id, list_id } = req.params;
@@ -35,4 +40,15 @@ const verifyItemPath = (req: Request, res: Response, next: NextFunction) => {
     .catch(error => res.status(500).json({ message: 'Invalid item_id or Bad Request!' }))
 }
 
-export default { verifyUserAndListPath, verifyItemPath };
+const verifyUserAccess = (req: Request, res: Response, next: NextFunction) => {
+    const { user_id } = req.params;
+    const token = req.body.token || req.query.token || req.headers["x-access-token"];
+    const { _id } = jwt.decode(token) as JwtPayload;
+
+    if (user_id !== _id){
+        return res.status(403).json({ message: 'You dont have access to manipulate item in this list!' });
+    }
+    return next();
+}
+
+export default { verifyUserAndListPath, verifyItemPath, verifyUserAccess };

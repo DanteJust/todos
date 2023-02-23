@@ -2,15 +2,17 @@ import { NextFunction, Request, Response } from "express";
 import List from "../models/List";
 
 const verifyListPayload = (req: Request, res: Response, next: NextFunction) => {
-    const token = req.body.token || req.query.token;
     const name = req.body.name || req.query.name;
 
-    if (!(name && token)){
+    if (!name){
         return res.status(400).json({ message: 'All fields are required!' });
     }
-
-    if (typeof name !== 'string' || typeof token !== 'string'){
+    if (typeof name !== 'string'){
         return res.status(500).json({ message: 'All fields must be strings!' });
+    }
+
+    if (name.trim().length === 0){
+        return res.status(400).json({ message: 'Fields cant be empty!' });
     }
 
     return next();

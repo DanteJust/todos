@@ -13,16 +13,13 @@ const getAllLists = async (req: Request, res: Response, next: NextFunction) => {
 }
 
 const getUserLists = async (req: Request, res: Response, next: NextFunction) => {
-    const { username } = req.params;
+    const { user_id } = req.params;
 
-    return User.findOne({ username: username })
+    return User.findById(user_id)
     .then(async (user) => {
-        if (user === null){
-            return res.status(404).json({ message: 'User not found!' });
-        }
-        return List.find({ owner_id: user._id }).then(list => res.status(200).json({ list })).catch(error => res.status(500).json({ error }));
+        return List.find({ owner_id: user._id }).then(lists => res.status(200).json({ lists })).catch(error => res.status(500).json({ error }));
     })
-    .catch(error => res.status(500).json({ error }));
+    .catch(error => res.status(404).json({ message: 'Invalid user_id!' }));
 }
 
 const createList = async (req: Request, res: Response, next: NextFunction) => {

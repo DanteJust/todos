@@ -7,31 +7,29 @@ import jwt from 'jsonwebtoken';
 const config = process.env;
 
 const getUser = async (req: Request, res: Response, next: NextFunction) => {
-    const { username } = req.params;
+    const { user_id } = req.params;
 
-    return User.findOne({ username: username })
-    .then(user => {
-        if (user === null){
-            return res.status(404).json({ message: 'User not found!' });
+    return User.findById(user_id)
+    .then(searchedUser => {
+        const user = {
+            _id: searchedUser._id,
+            username: searchedUser.username
         }
-        const userWithoutPassword = {
-            _id: user._id,
-            username: user.username
-        }
-        res.status(200).json({ userWithoutPassword });
+        res.status(200).json({ user });
     })
+    .catch(error => res.status(404).json({ message: 'Invalid user_id!' }));
 }
 
 const getAllUsers = async (req: Request, res: Response, next: NextFunction) => {
 
-    return User.find({}).then(users => {
-        const usersWithoutPassword = users.map(user => {
+    return User.find({}).then(searchedUsers => {
+        const users = searchedUsers.map(user => {
             return {
                 _id: user._id,
                 username: user.username
             }
         });
-        res.status(200).json({ usersWithoutPassword });
+        res.status(200).json({ users });
     })
     .catch(error => res.status(500).json({ error }));
 }

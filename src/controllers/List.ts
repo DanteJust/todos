@@ -19,7 +19,7 @@ const getUserLists = async (req: Request, res: Response, next: NextFunction) => 
     .then(async (user) => {
         return List.find({ owner_id: user._id }).then(lists => res.status(200).json({ lists })).catch(error => res.status(500).json({ error }));
     })
-    .catch(error => res.status(404).json({ message: 'Invalid user_id!' }));
+    .catch(error => res.status(404).json({ error }));
 }
 
 const createList = async (req: Request, res: Response, next: NextFunction) => {

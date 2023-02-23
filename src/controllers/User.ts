@@ -9,15 +9,7 @@ const config = process.env;
 const getUser = async (req: Request, res: Response, next: NextFunction) => {
     const { user_id } = req.params;
 
-    return User.findById(user_id)
-    .then(searchedUser => {
-        const user = {
-            _id: searchedUser._id,
-            username: searchedUser.username
-        }
-        res.status(200).json({ user });
-    })
-    .catch(error => res.status(404).json({ message: 'Invalid user_id!' }));
+    return User.findById(user_id).then(user => res.status(200).json({ user })).catch(error => res.status(500).json({ error }));
 }
 
 const getAllUsers = async (req: Request, res: Response, next: NextFunction) => {

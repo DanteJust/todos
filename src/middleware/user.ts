@@ -1,4 +1,5 @@
 import { NextFunction, Request, Response } from "express";
+import User from "../models/User";
 
 const verifyUserPayload = (req: Request, res: Response, next: NextFunction) => {
     const username = req.body.username || req.query.username;
@@ -15,4 +16,16 @@ const verifyUserPayload = (req: Request, res: Response, next: NextFunction) => {
     return next();
 }
 
-export = verifyUserPayload;
+const verifyUserPath = (req: Request, res: Response, next: NextFunction) => {
+    const { user_id } = req.params;
+
+    User.findById(user_id).then(user => {
+        if (user === null){
+            return res.status(404).json({ message: 'User not found!' });
+        }
+        return next();
+    })
+    .catch(error => res.status(500).json({ message: 'Invalid user_id or Bad Request!' }));
+}
+
+export default { verifyUserPayload, verifyUserPath };

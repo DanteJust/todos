@@ -5,7 +5,15 @@ import routeMiddleware from '../middleware/route';
 
 const authRouter = express.Router();
 
-authRouter.post('/registration', userMiddleware.verifyUserPayload, userController.registerUser).all('/registration', routeMiddleware.methodNotAllowed);
-authRouter.post('/login', userMiddleware.verifyUserPayload, userController.loginUser).all('/login', routeMiddleware.methodNotAllowed);
+authRouter
+    .post(
+        "/registration",
+        userMiddleware.verifyUserPayload,
+        userController.registerUser
+    )
+    .all("/registration", routeMiddleware.methodNotAllowed);
+authRouter
+    .post("/login", userMiddleware.verifyUserPayload, userController.loginUser)
+    .all("/login", routeMiddleware.methodNotAllowed);
 
 export = authRouter;

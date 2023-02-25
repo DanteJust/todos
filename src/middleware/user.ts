@@ -1,9 +1,8 @@
-import { NextFunction, Request, Response } from "express";
-import User from "../models/User";
+import { NextFunction, Request, Response } from 'express';
+import User from '../models/User';
 
 const verifyUserPayload = (req: Request, res: Response, next: NextFunction) => {
-    const username = req.body.username || req.query.username;
-    const password = req.body.password || req.query.password;
+    const { username, password } = req.body;
 
     if (!(username && password)){
         return res.status(400).json({ message: 'All fields are required!' });
@@ -25,7 +24,7 @@ const verifyUserPath = (req: Request, res: Response, next: NextFunction) => {
         }
         return next();
     })
-    .catch(error => res.status(500).json({ message: 'Invalid user_id or Bad Request!' }));
+    .catch(() => res.status(500).json({ message: 'Invalid user_id or Bad Request!' }));
 }
 
 export default { verifyUserPayload, verifyUserPath };

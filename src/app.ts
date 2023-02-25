@@ -11,7 +11,7 @@ const app = express();
 mongoose.set('strictQuery', false);
 mongoose.connect(config.mongo.url, { retryWrites: true, w: 'majority' })
 .then(() => { 
-    console.log('connected to DB');
+    console.log('Connected to DB');
     startApi();
 })
 .catch(error => { 

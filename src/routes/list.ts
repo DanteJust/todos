@@ -1,11 +1,11 @@
-import express from "express";
-import listController from "../controllers/List";
-import itemController from "../controllers/Item";
-import authMiddleware from "../middleware/auth";
-import listMiddleware from "../middleware/list";
-import userMiddleware from "../middleware/user";
-import itemMiddleware from "../middleware/item";
-import routeMiddleware from "../middleware/route";
+import express from 'express';
+import listController from '../controllers/List';
+import itemController from '../controllers/Item';
+import authMiddleware from '../middleware/auth';
+import listMiddleware from '../middleware/list';
+import userMiddleware from '../middleware/user';
+import itemMiddleware from '../middleware/item';
+import routeMiddleware from '../middleware/route';
 
 const listRouter = express.Router();
 

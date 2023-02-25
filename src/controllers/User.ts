@@ -1,18 +1,18 @@
-import { NextFunction, Request, Response } from "express";
-import mongoose from "mongoose";
-import User from "../models/User";
+import { Request, Response } from 'express';
+import mongoose from 'mongoose';
+import User from '../models/User';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 
 const config = process.env;
 
-const getUser = async (req: Request, res: Response, next: NextFunction) => {
+const getUser = async (req: Request, res: Response) => {
     const { user_id } = req.params;
 
     return User.findById(user_id).then(user => res.status(200).json({ user })).catch(error => res.status(500).json({ error }));
 }
 
-const getAllUsers = async (req: Request, res: Response, next: NextFunction) => {
+const getAllUsers = async (req: Request, res: Response) => {
 
     return User.find({}).then(searchedUsers => {
         const users = searchedUsers.map(user => {
@@ -26,7 +26,7 @@ const getAllUsers = async (req: Request, res: Response, next: NextFunction) => {
     .catch(error => res.status(500).json({ error }));
 }
 
-const registerUser = async (req: Request, res: Response, next: NextFunction) => {
+const registerUser = async (req: Request, res: Response) => {
     const { username, password } = req.body;
 
     const checkIfUserAlreadyExists = await User.findOne({ username: username });
@@ -45,7 +45,7 @@ const registerUser = async (req: Request, res: Response, next: NextFunction) => 
     return user.save().then(user => res.status(201).json({ user })).catch(error => res.status(500).json({ error }));
 };
 
-const loginUser = async (req: Request, res: Response, next: NextFunction) => {
+const loginUser = async (req: Request, res: Response) => {
     const { username, password } = req.body;
 
     return User.findOne({ username: username })

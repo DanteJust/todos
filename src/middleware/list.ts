@@ -1,8 +1,8 @@
-import { NextFunction, Request, Response } from "express";
-import List from "../models/List";
+import { NextFunction, Request, Response } from 'express';
+import List from '../models/List';
 
 const verifyListPayload = (req: Request, res: Response, next: NextFunction) => {
-    const name = req.body.name || req.query.name;
+    const { name } = req.body;
 
     if (!name){
         return res.status(400).json({ message: 'All fields are required!' });
@@ -28,7 +28,7 @@ const verifyListPath = (req: Request, res: Response, next: NextFunction) => {
         }
         return next();
     })
-    .catch(error => res.status(500).json({ message: 'Invalid list_id or Bad request!' }));
+    .catch(() => res.status(500).json({ message: 'Invalid list_id or Bad request!' }));
 }
 
 export default { verifyListPayload, verifyListPath };

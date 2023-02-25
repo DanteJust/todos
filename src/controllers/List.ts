@@ -3,6 +3,7 @@ import mongoose from "mongoose";
 import List from "../models/List";
 import User from "../models/User";
 import jwt from "jsonwebtoken";
+import Item from "../models/Item";
 
 interface JwtPayload {
      _id: string
@@ -42,15 +43,14 @@ const createList = async (req: Request, res: Response, next: NextFunction) => {
 }
 
 const deleteList = async (req: Request, res: Response, next: NextFunction) => {
-    const { name, token } = req.body;
-    const { _id } = jwt.decode(token) as JwtPayload;
-
-    const checkIfListExists = await List.findOne({ name: name, owner_id: _id });
-    if (checkIfListExists == null){
-        return res.status(404).json({ message: 'List with that name doesnt exist!' });
-    }
-
-    return List.deleteOne({ name: name, owner_id: _id }).then(() => res.status(204).json({ message: 'List successfully deleted!' })).catch(error => res.status(500).json({ error }));
+    const { list_id } = req.params;
+    
+    return List.deleteOne({ _id: list_id }).then(() => {
+        Item.deleteMany({ list_id: list_id })
+        .then(() => res.status(200).json({ message: 'List successfully deleted!' }))
+        .catch(error => res.status(500).json({ error }));
+    })
+    .catch(error => res.status(500).json({ error }));
 }
 
 export default { createList, deleteList, getUserLists, getAllLists };

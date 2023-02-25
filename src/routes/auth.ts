@@ -1,11 +1,11 @@
 import express from 'express';
-import controller from '../controllers/User';
+import userController from '../controllers/User';
 import userMiddleware from '../middleware/user';
-import methodNotAllowed from '../middleware/route';
+import routeMiddleware from '../middleware/route';
 
 const authRouter = express.Router();
 
-authRouter.post('/registration', userMiddleware.verifyUserPayload, controller.registerUser).all('/registration', methodNotAllowed);
-authRouter.post('/login', userMiddleware.verifyUserPayload, controller.loginUser).all('/login', methodNotAllowed);
+authRouter.post('/registration', userMiddleware.verifyUserPayload, userController.registerUser).all('/registration', routeMiddleware.methodNotAllowed);
+authRouter.post('/login', userMiddleware.verifyUserPayload, userController.loginUser).all('/login', routeMiddleware.methodNotAllowed);
 
 export = authRouter;

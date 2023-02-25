@@ -20,7 +20,7 @@ const checkPayloadTypesAndPresence = (req: Request, res: Response, next: NextFun
     if (!(title && text && deadline)){
         return res.status(400).json({ message: 'All fields are required!' });
     }
-    if (typeof title !== 'string' || text !== 'string' || deadline !== 'string'){
+    if (typeof title !== 'string' || typeof text !== 'string' || typeof deadline !== 'string'){
         return res.status(500).json({ message: 'All fields must be string!' });
     }
     if (title.trim().length === 0 || text.trim().length === 0 || deadline.trim().length === 0){
@@ -30,6 +30,9 @@ const checkPayloadTypesAndPresence = (req: Request, res: Response, next: NextFun
         if (typeof status !== 'string'){
             return res.status(500).json({ message: 'All fields must be string!' });
         }
+    }
+    if (isNaN(Date.parse(deadline))){
+        return res.status(400).json({ message: 'Invalid deadline format!' });
     }
 
     return next();

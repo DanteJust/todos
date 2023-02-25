@@ -28,7 +28,7 @@ const verifyUserAccess = (req: Request, res: Response, next: NextFunction) => {
   const { _id } = jwt.decode(token) as JwtPayload;
 
   if (user_id !== _id){
-      return res.status(403).json({ message: 'You dont have access to manipulate item in this list!' });
+      return res.status(403).json({ message: 'You dont have access to this list!' });
   }
   return next();
 }

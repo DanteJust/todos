@@ -37,7 +37,7 @@ const createItem = async (req: Request, res: Response, next: NextFunction) => {
 const deleteItem = async (req: Request, res: Response, next: NextFunction) => {
     const { list_id, item_id } = req.params;
 
-    return Item.deleteOne({ _id: item_id, list_id: list_id }).then(() => res.status(204).json({ message: 'Item deleted!' })).catch(error => res.status(500).json({ error }));
+    return Item.deleteOne({ _id: item_id, list_id: list_id }).then(() => res.status(200).json({ message: 'Item deleted!' })).catch(error => res.status(500).json({ error }));
 }
 
 const updateItem = async (req: Request, res: Response, next: NextFunction) => {

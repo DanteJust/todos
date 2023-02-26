@@ -14,12 +14,12 @@ listRouter
     .all("/", routeMiddleware.methodNotAllowed);
 listRouter
     .post(
-        "/create",
+        "/new",
         authMiddleware.verifyToken,
         listMiddleware.verifyListPayload,
         listController.createList
     )
-    .all("/create", routeMiddleware.methodNotAllowed);
+    .all("/new", routeMiddleware.methodNotAllowed);
 listRouter
     .get(
         "/:user_id",

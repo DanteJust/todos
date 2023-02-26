@@ -9,7 +9,13 @@ const config = process.env;
 const getUser = async (req: Request, res: Response) => {
     const { user_id } = req.params;
 
-    return User.findById(user_id).then(user => res.status(200).json({ user })).catch(error => res.status(500).json({ error }));
+    return User.findById(user_id).then(searchedUser => {
+        const user = {
+            _id: searchedUser._id,
+            username: searchedUser.username
+        };
+        return res.status(200).json({ user })
+    }).catch(error => res.status(500).json({ error }));
 }
 
 const getAllUsers = async (req: Request, res: Response) => {
@@ -42,7 +48,13 @@ const registerUser = async (req: Request, res: Response) => {
         password: hashedPassword
     });
 
-    return user.save().then(user => res.status(201).json({ user })).catch(error => res.status(500).json({ error }));
+    return user.save().then(newUser => {
+        const user = {
+            _id: newUser._id,
+            username: newUser.username
+        };
+        return res.status(201).json({ user })
+    }).catch(error => res.status(500).json({ error }));
 };
 
 const loginUser = async (req: Request, res: Response) => {

@@ -1,21 +1,23 @@
 import express from 'express';
 import authMiddleware from '../middleware/auth';
-import userMiddleware from '../middleware/user';
+import pathMiddlware from '../middleware/path';
 import userController from '../controllers/User';
-import routeMiddleware from '../middleware/route';
+import errorMiddleware from '../middleware/error';
 
 const userRouter = express.Router();
 
 userRouter
-    .get("/", authMiddleware.verifyToken, userController.getAllUsers)
-    .all("/", routeMiddleware.methodNotAllowed);
+    .get("/", authMiddleware.verifyToken, 
+    userController.getAllUsers
+    )
+    .all("/", errorMiddleware.methodNotAllowed);
 userRouter
     .get(
         "/:user_id",
         authMiddleware.verifyToken,
-        userMiddleware.verifyUserPath,
+        pathMiddlware.verifyUserPath,
         userController.getUser
     )
-    .all("/:user_id", routeMiddleware.methodNotAllowed);
+    .all("/:user_id", errorMiddleware.methodNotAllowed);
 
 export = userRouter;

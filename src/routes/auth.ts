@@ -1,19 +1,26 @@
 import express from 'express';
 import userController from '../controllers/User';
-import userMiddleware from '../middleware/user';
-import routeMiddleware from '../middleware/route';
+import errorMiddleware from '../middleware/error';
+import { body } from 'express-validator';
 
 const authRouter = express.Router();
 
 authRouter
     .post(
         "/registration",
-        userMiddleware.verifyUserPayload,
+        body('username').isString().notEmpty(),
+        body('password').isString().notEmpty(),
+        errorMiddleware.printPossibleErrors,
         userController.registerUser
     )
-    .all("/registration", routeMiddleware.methodNotAllowed);
+    .all("/registration", errorMiddleware.methodNotAllowed);
 authRouter
-    .post("/login", userMiddleware.verifyUserPayload, userController.loginUser)
-    .all("/login", routeMiddleware.methodNotAllowed);
+    .post("/login",
+    body('username').isString().notEmpty(),
+    body('password').isString().notEmpty(),
+    errorMiddleware.printPossibleErrors,
+    userController.loginUser
+    )
+    .all("/login", errorMiddleware.methodNotAllowed);
 
 export = authRouter;

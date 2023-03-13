@@ -8,7 +8,7 @@ interface JwtPayload {
 };
 
 const verifyToken = (req: Request, res: Response, next: NextFunction) => {
-    const token = req.body.token || req.headers["x-access-token"];
+    const token = req.body.token || req.headers["x_access_token"];
   
     if (!token) {
       return res.status(403).json({ message: "A token is required for authentication!" });
@@ -24,7 +24,7 @@ const verifyToken = (req: Request, res: Response, next: NextFunction) => {
 
 const verifyUserAccess = (req: Request, res: Response, next: NextFunction) => {
   const { user_id } = req.params;
-  const token = req.headers["x-access-token"] || req.body.token;
+  const token = req.headers["x_access_token"] || req.body.token;
   const { _id } = jwt.decode(token) as JwtPayload;
 
   if (user_id !== _id){
